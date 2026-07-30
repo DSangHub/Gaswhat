@@ -1,0 +1,52 @@
+async function submitLead(e) {
+    e.preventDefault();
+    
+    // Grab form inputs
+    const form = e.target;
+    const name = form.querySelector('input[type="text"]').value;
+    const email = form.querySelector('input[type="email"]').value;
+    const phone = form.querySelector('input[type="tel"]').value;
+    const selectedDealerId = document.getElementById('modal-dealer-select').value;
+    
+    // Grab current calculator values
+    const currentVehicle = document.getElementById('current-car-name').value;
+    const targetType = document.getElementById('target-type').value;
+    const monthlySavingsText = document.getElementById('monthly-savings-display').innerText;
+    const monthlySavings = parseFloat(monthlySavingsText.replace(/[^0-9.]/g, '')) || 0;
+    const zipCode = document.getElementById('zip-input').value || '93721';
+
+    // Show loading state on button
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerText;
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Sending Request...';
+
+    // Insert lead into Supabase
+    const { data, error } = await supabase
+        .from('leads')
+        .insert([
+            {
+                consumer_name: name,
+                consumer_email: email,
+                consumer_phone: phone,
+                consumer_zip: zipCode,
+                current_vehicle_desc: currentVehicle,
+                target_vehicle_desc: targetType.toUpperCase(),
+                est_monthly_savings: monthlySavings,
+                dealership_id: selectedDealerId === 'any' ? null : selectedDealerId
+            }
+        ]);
+
+    submitBtn.disabled = false;
+    submitBtn.innerText = originalText;
+
+    if (error) {
+        console.error('Supabase Lead Error:', error);
+        alert('There was an error saving your request: ' + error.message);
+        return;
+    }
+
+    alert('Your savings request has been submitted successfully! Local dealers will reach out shortly.');
+    form.reset();
+    toggleModal('lead-modal');
+}

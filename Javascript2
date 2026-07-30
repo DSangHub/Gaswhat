@@ -1,0 +1,43 @@
+// In form-register handler
+document.getElementById('form-register').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    const inputs = form.querySelectorAll('input');
+    const name = inputs[0].value;
+    const brand = inputs[1].value;
+    const zip = inputs[2].value;
+    const email = inputs[3].value;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Registering...';
+
+    const { data, error } = await supabase
+        .from('dealerships')
+        .insert([
+            {
+                name: name,
+                brand: brand,
+                zip: zip,
+                email: email,
+                is_active: true
+            }
+        ]);
+
+    submitBtn.disabled = false;
+    submitBtn.innerText = 'Submit Partnership Request';
+
+    if (error) {
+        console.error('Supabase Dealer Error:', error);
+        alert('Registration failed: ' + error.message);
+        return;
+    }
+
+    alert('Dealership registered successfully! Refreshing dealer list...');
+    form.reset();
+    toggleModal('dealer-modal');
+    
+    // Fetch updated dealers list dynamically
+    loadDealersFromSupabase();
+});

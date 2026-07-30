@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GasWhat.org | Beat High Fuel Prices with Hybrids & EVs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="bg-brand-600 text-white p-2 rounded-lg">
+                    <i data-lucide="zap" class="w-6 h-6"></i>
+                </div>
+                <span class="text-2xl font-black tracking-tight text-slate-900">GasWhat<span class="text-brand-600">.org</span></span>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-sm text-slate-600">
+                <a href="#calculator" class="hover:text-brand-600 transition">Savings Calculator</a>
+                <a href="#rebates" class="hover:text-brand-600 transition">Government Rebates</a>
+                <a href="#dealers" class="hover:text-brand-600 transition">Find Dealers</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleModal('dealer-modal')" class="text-xs sm:text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg transition border border-slate-300">
+                    Dealer Portal
+                </button>
+                <a href="#calculator" class="text-xs sm:text-sm font-semibold bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg transition shadow-sm">
+                    Calculate Savings
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative bg-slate-900 text-white py-16 lg:py-24 overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-flex items-center space-x-2 bg-brand-500/10 text-brand-500 border border-brand-500/20 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-6">
+                <i data-lucide="trending-up" class="w-4 h-4"></i>
+                <span>Gas Prices Are Rising Again</span>
+            </span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight">
+                Stop Overpaying at the Pump. Compare Hybrid & EV Savings Instantly.
+            </h1>
+            <p class="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto font-normal">
+                Discover your exact monthly savings, unlock federal & state cash rebates, and connect with verified local dealers ready to get you on the road.
+            </p>
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#calculator" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-500 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                    <span>Calculate Your Savings</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+                <a href="#rebates" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-8 py-4 rounded-xl transition border border-slate-700">
+                    Check Local Rebates
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CALCULATOR SECTION -->
+    <section id="calculator" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-slate-900">Interactive Savings Estimator</h2>
+            <p class="text-slate-600 mt-2">Adjust your vehicle details below to view instant monthly and annual fuel savings.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- INPUT CONTROLS -->
+            <div class="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+                <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-brand-600"></i>
+                    1. Enter Your Driving Profile
+                </h3>
+
+                <!-- Driving Habits -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Annual Mileage</label>
+                        <input type="number" id="annual-miles" value="12000" oninput="calculateSavings()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Local Gas Price ($/gal)</label>
+                        <input type="number" step="0.10" id="gas-price" value="4.25" oninput="calculateSavings()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2 pt-2">
+                    <i data-lucide="fuel" class="w-5 h-5 text-red-500"></i>
+                    2. Current Vehicle
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Combined MPG</label>
+                        <input type="number" id="current-mpg" value="22" oninput="calculateSavings()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Vehicle Description</label>
+                        <input type="text" id="current-car-name" value="2018 Midsize SUV" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2 pt-2">
+                    <i data-lucide="zap" class="w-5 h-5 text-brand-600"></i>
+                    3. Target Hybrid or EV
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Select Target Type</label>
+                        <select id="target-type" onchange="updateTargetDefaults(); calculateSavings()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="ev" selected>Full Electric (EV)</option>
+                            <option value="phev">Plug-in Hybrid (PHEV)</option>
+                            <option value="hybrid">Standard Hybrid</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Target Efficiency</label>
+                        <div id="efficiency-container">
+                            <input type="number" id="target-efficiency" value="3.5" oninput="calculateSavings()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <span id="efficiency-unit" class="text-xs text-slate-500 mt-1 block">Miles / kWh</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULTS CARD -->
+            <div class="lg:col-span-5 bg-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col justify-between border border-slate-800">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-400">Estimated Output</span>
+                    <h3 class="text-2xl font-bold mt-1">Your Total Savings</h3>
+
+                    <div class="mt-8 bg-slate-800/80 rounded-xl p-6 border border-slate-700">
+                        <span class="text-slate-400 text-sm font-medium">Monthly Savings</span>
+                        <div class="text-5xl font-black text-brand-400 mt-2" id="monthly-savings-display">$172</div>
+                        <span class="text-slate-400 text-xs mt-2 block" id="annual-savings-display">That's ~$2,064 per year back in your wallet.</span>
+                    </div>
+
+                    <div class="mt-6 space-y-3 text-sm">
+                        <div class="flex justify-between py-2 border-b border-slate-800">
+                            <span class="text-slate-400">Current Monthly Fuel:</span>
+                            <span class="font-semibold" id="current-cost-display">$231</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-slate-800">
+                            <span class="text-slate-400">New Monthly Energy:</span>
+                            <span class="font-semibold text-brand-400" id="new-cost-display">$59</span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-slate-400">5-Year Projected Savings:</span>
+                            <span class="font-bold text-white" id="five-year-display">$10,320</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-800">
+                    <button onclick="openLeadModal()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3.5 px-4 rounded-xl transition flex items-center justify-center space-x-2">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                        <span>Claim Local Dealer Quotes</span>
+                    </button>
+                    <p class="text-xs text-center text-slate-500 mt-2">No obligation • Takes 30 seconds</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GOVERNMENT REBATES SECTION -->
+    <section id="rebates" class="bg-white py-16 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+                <div>
+                    <span class="text-brand-600 text-xs font-bold uppercase tracking-wider">Government Incentives</span>
+                    <h2 class="text-3xl font-bold text-slate-900 mt-1">State & Federal Rebate Finder</h2>
+                    <p class="text-slate-600 mt-2">Lower your down payment with upfront tax credits and localized grants.</p>
+                </div>
+
+                <div class="mt-4 md:mt-0 flex gap-2">
+                    <input type="text" id="zip-input" placeholder="Enter ZIP Code" value="93721" class="bg-slate-50 border border-slate-300 rounded-lg px-4 py-2 font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none w-36">
+                    <button onclick="searchRebates()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
+                        Update Region
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="rebates-container">
+                <!-- Federal -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-brand-500 transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">Federal</span>
+                        <i data-lucide="landmark" class="w-5 h-5 text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Clean Vehicle Tax Credit</h3>
+                    <p class="text-3xl font-extrabold text-brand-600 my-3">Up to $7,500</p>
+                    <p class="text-sm text-slate-600 mb-4">Applied directly at dealership point-of-sale for eligible new EVs and Plug-in Hybrids.</p>
+                    <span class="text-xs text-slate-500 font-medium">Status: Active nationwide</span>
+                </div>
+
+                <!-- State -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-brand-500 transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded" id="state-tag">State Program</span>
+                        <i data-lucide="map-pin" class="w-5 h-5 text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900" id="state-title">Clean Vehicle Rebate</h3>
+                    <p class="text-3xl font-extrabold text-brand-600 my-3" id="state-amount">Up to $4,000</p>
+                    <p class="text-sm text-slate-600 mb-4" id="state-desc">State grant based on household income qualification and battery capacity.</p>
+                    <span class="text-xs text-slate-500 font-medium" id="state-region">Region: California</span>
+                </div>
+
+                <!-- Local Utility -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-brand-500 transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded">Local Utility</span>
+                        <i data-lucide="zap" class="w-5 h-5 text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Home Charger Credit</h3>
+                    <p class="text-3xl font-extrabold text-brand-600 my-3">$500 – $1,000</p>
+                    <p class="text-sm text-slate-600 mb-4">Rebate for installing Level 2 home charging hardware and enrolling in off-peak rates.</p>
+                    <span class="text-xs text-slate-500 font-medium">Status: Participating Electric Utilities</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GEOLOCATION DEALERS SECTION -->
+    <section id="dealers" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+            <div>
+                <span class="text-brand-600 text-xs font-bold uppercase tracking-wider">Inventory & Dealers</span>
+                <h2 class="text-3xl font-bold text-slate-900 mt-1">Verified Nearby Dealerships</h2>
+                <p class="text-slate-600 mt-2">Connect directly with dealerships offering certified EV/Hybrid specialists.</p>
+            </div>
+            <button onclick="geolocateUser()" class="mt-4 md:mt-0 inline-flex items-center space-x-2 text-sm font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-lg border border-brand-200 transition">
+                <i data-lucide="navigation" class="w-4 h-4"></i>
+                <span>Use Current Location</span>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="dealers-grid">
+            <!-- Dealer Cards Populated via JavaScript -->
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div class="flex items-center space-x-2">
+                <div class="bg-brand-600 text-white p-1.5 rounded">
+                    <i data-lucide="zap" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold text-white">GasWhat<span class="text-brand-500">.org</span></span>
+            </div>
+            <p class="text-xs text-center md:text-left">
+                &copy; 2026 GasWhat.org. EPA data updated periodically. All estimations are subject to regional utility rates.
+            </p>
+            <div class="flex space-x-6 text-sm">
+                <button onclick="toggleModal('dealer-modal')" class="hover:text-white transition">Dealer Sign-In</button>
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CONSUMER LEAD MODAL -->
+    <div id="lead-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 relative shadow-2xl">
+            <button onclick="toggleModal('lead-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-slate-900">Lock In Your Savings</h3>
+            <p class="text-sm text-slate-600 mt-1">Send your calculated profile to certified local dealers to receive exact pricing and rebate assistance.</p>
+
+            <form onsubmit="submitLead(event)" class="mt-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Full Name</label>
+                    <input type="text" required placeholder="Alex Morgan" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Email Address</label>
+                    <input type="email" required placeholder="alex@example.com" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Phone Number</label>
+                    <input type="tel" required placeholder="(555) 000-0000" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Preferred Dealer</label>
+                    <select id="modal-dealer-select" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <!-- Options generated dynamically -->
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-lg transition shadow-md">
+                    Request Dealer Quotes
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DEALER PORTAL MODAL -->
+    <div id="dealer-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
+            <button onclick="toggleModal('dealer-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="text-center">
+                <span class="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full uppercase">For Auto Dealerships</span>
+                <h3 class="text-2xl font-bold text-slate-900 mt-2">Partner With GasWhat.org</h3>
+                <p class="text-sm text-slate-600 mt-1">Receive high-intent leads from buyers ready to make the switch to EVs or Hybrids.</p>
+            </div>
+
+            <div class="mt-6 border-b border-slate-200 flex justify-center space-x-6 text-sm font-semibold">
+                <button id="tab-login" onclick="switchDealerTab('login')" class="pb-2 border-b-2 border-brand-600 text-brand-600">Dealer Sign In</button>
+                <button id="tab-register" onclick="switchDealerTab('register')" class="pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800">Register Dealership</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="form-login" onsubmit="event.preventDefault(); alert('Login successful! Redirecting to lead portal...');" class="mt-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Work Email</label>
+                    <input type="email" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Password</label>
+                    <input type="password" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-lg transition">
+                    Access Dashboard
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="form-register" onsubmit="event.preventDefault(); alert('Registration submitted! Our partnership team will contact you within 24 hours.');" class="mt-6 space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Dealership Name</label>
+                    <input type="text" required placeholder="Central Toyota / Valley EV Center" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Brand Franchise</label>
+                        <input type="text" required placeholder="e.g. Hyundai, Tesla, Any" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">ZIP Code</label>
+                        <input type="text" required placeholder="93721" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Work Email</label>
+                    <input type="email" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-lg transition">
+                    Submit Partnership Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Sample Dealers Dataset
+        const sampleDealers = [
+            { id: '1', name: 'Valley Eco Motors', brand: 'Hyundai / Kia', distance: '3.2 miles away', address: '1420 Auto Center Dr', zip: '93721' },
+            { id: '2', name: 'Central Valley Toyota', brand: 'Toyota', distance: '5.8 miles away', address: '880 N Blackstone Ave', zip: '93721' },
+            { id: '3', name: 'Sierra EV Station', brand: 'Tesla / Rivian', distance: '8.1 miles away', address: '2050 Expressway Blvd', zip: '93721' }
+        ];
+
+        // Initialize Icons & Dealers on load
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            calculateSavings();
+            renderDealers(sampleDealers);
+        });
+
+        // Dynamic Calculations
+        function calculateSavings() {
+            const miles = parseFloat(document.getElementById('annual-miles').value) || 0;
+            const gasPrice = parseFloat(document.getElementById('gas-price').value) || 0;
+            const currentMpg = parseFloat(document.getElementById('current-mpg').value) || 1;
+            const targetType = document.getElementById('target-type').value;
+            const targetEfficiency = parseFloat(document.getElementById('target-efficiency').value) || 1;
+
+            // Current Gas Cost
+            const annualCurrentCost = (miles / currentMpg) * gasPrice;
+
+            // Target Vehicle Cost
+            let annualNewCost = 0;
+            if (targetType === 'ev') {
+                const electricityRate = 0.16; // $0.16 / kWh avg
+                annualNewCost = (miles / targetEfficiency) * electricityRate;
+            } else if (targetType === 'phev') {
+                // Assuming 50% EV mode, 50% Hybrid mode at 45 MPG
+                const electricityRate = 0.16;
+                const evCost = ((miles * 0.5) / 3.0) * electricityRate;
+                const gasCost = ((miles * 0.5) / 45) * gasPrice;
+                annualNewCost = evCost + gasCost;
+            } else {
+                // Standard Hybrid
+                annualNewCost = (miles / targetEfficiency) * gasPrice;
+            }
+
+            const annualSavings = Math.max(0, annualCurrentCost - annualNewCost);
+            const monthlySavings = annualSavings / 12;
+
+            // Update DOM
+            document.getElementById('monthly-savings-display').innerText = `$${Math.round(monthlySavings).toLocaleString()}`;
+            document.getElementById('annual-savings-display').innerText = `That's ~$${Math.round(annualSavings).toLocaleString()} per year back in your wallet.`;
+            document.getElementById('current-cost-display').innerText = `$${Math.round(annualCurrentCost / 12)}/mo`;
+            document.getElementById('new-cost-display').innerText = `$${Math.round(annualNewCost / 12)}/mo`;
+            document.getElementById('five-year-display').innerText = `$${Math.round(annualSavings * 5).toLocaleString()}`;
+        }
+
+        function updateTargetDefaults() {
+            const type = document.getElementById('target-type').value;
+            const effInput = document.getElementById('target-efficiency');
+            const unitSpan = document.getElementById('efficiency-unit');
+
+            if (type === 'ev') {
+                effInput.value = '3.5';
+                unitSpan.innerText = 'Miles / kWh (Avg: 3.0 - 4.0)';
+            } else if (type === 'phev') {
+                effInput.value = '42';
+                unitSpan.innerText = 'Electric Range (Miles)';
+            } else {
+                effInput.value = '52';
+                unitSpan.innerText = 'Combined MPG';
+            }
+        }
+
+        // Render Dealer Cards
+        function renderDealers(dealers) {
+            const container = document.getElementById('dealers-grid');
+            const selectContainer = document.getElementById('modal-dealer-select');
+            
+            container.innerHTML = '';
+            selectContainer.innerHTML = '<option value="any">Any Nearby Verified Dealer</option>';
+
+            dealers.forEach(dealer => {
+                // Card UI
+                container.innerHTML += `
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">${dealer.brand}</span>
+                                <h3 class="text-lg font-bold text-slate-900 mt-2">${dealer.name}</h3>
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium">${dealer.distance}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-3 flex items-center gap-1">
+                            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                            ${dealer.address}
+                        </p>
+                        <button onclick="openLeadModal('${dealer.name}')" class="mt-6 w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 rounded-lg text-sm transition">
+                            Request Lead Quote
+                        </button>
+                    </div>
+                `;
+
+                // Select Option
+                selectContainer.innerHTML += `<option value="${dealer.id}">${dealer.name} (${dealer.brand})</option>`;
+            });
+
+            lucide.createIcons();
+        }
+
+        // Search Rebates Mock
+        function searchRebates() {
+            const zip = document.getElementById('zip-input').value || '93721';
+            document.getElementById('state-region').innerText = `Region: ZIP ${zip}`;
+            alert(`Updated government rebate criteria for ZIP code: ${zip}`);
+        }
+
+        // Geolocation Lookup Mock
+        function geolocateUser() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        alert(`Location acquired (${position.coords.latitude.toFixed(2)}, ${position.coords.longitude.toFixed(2)}). Updating nearby dealers.`);
+                    },
+                    () => {
+                        alert('Unable to retrieve location. Using default ZIP.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        // Modal Toggles
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
+        }
+
+        function openLeadModal(dealerName = '') {
+            toggleModal('lead-modal');
+        }
+
+        function switchDealerTab(tab) {
+            const loginForm = document.getElementById('form-login');
+            const registerForm = document.getElementById('form-register');
+            const loginTab = document.getElementById('tab-login');
+            const registerTab = document.getElementById('tab-register');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginTab.className = 'pb-2 border-b-2 border-brand-600 text-brand-600';
+                registerTab.className = 'pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800';
+            } else {
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                registerTab.className = 'pb-2 border-b-2 border-brand-600 text-brand-600';
+                loginTab.className = 'pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800';
+            }
+        }
+
+        function submitLead(e) {
+            e.preventDefault();
+            alert('Your request has been sent! A participating local dealer will reach out shortly with exact quote options.');
+            toggleModal('lead-modal');
+        }
+    </script>
+</body>
+</html>

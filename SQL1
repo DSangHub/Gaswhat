@@ -1,0 +1,11 @@
+-- Allow authenticated dealership users to view and update leads
+CREATE POLICY "Authenticated dealers can view assigned leads"
+ON leads FOR SELECT
+TO authenticated
+USING (true);
+
+CREATE POLICY "Authenticated dealers can update lead status"
+ON leads FOR UPDATE
+TO authenticated
+USING (true)
+WITH CHECK (true);

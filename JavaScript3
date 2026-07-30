@@ -1,0 +1,31 @@
+async function loadDealersFromSupabase() {
+    const { data: dealers, error } = await supabase
+        .from('dealerships')
+        .select('id, name, brand, zip, city, address')
+        .eq('is_active', true)
+        .limit(10);
+
+    if (error) {
+        console.error('Error fetching dealers:', error);
+        return;
+    }
+
+    if (dealers && dealers.length > 0) {
+        // Map data to display format
+        const formattedDealers = dealers.map(d => ({
+            id: d.id,
+            name: d.name,
+            brand: d.brand,
+            distance: `ZIP: ${d.zip}`,
+            address: d.address || `${d.zip}`
+        }));
+        renderDealers(formattedDealers);
+    }
+}
+
+// Call on DOM content loaded
+document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    calculateSavings();
+    loadDealersFromSupabase();
+});
